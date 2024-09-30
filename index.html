@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placebomancy Oracle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .oracle-container {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 60%;
+        }
+        h1 {
+            color: #333;
+        }
+        .theme, .description {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="oracle-container">
+        <h1>Placebomancy Oracle</h1>
+        <div id="theme" class="theme"></div>
+        <div id="description" class="description"></div>
+        <button onclick="getRandomEntry()">Get Random Oracle</button>
+    </div>
+
+    <script>
+        const entries = [
+            { theme: "Adventure Day", description: "Explore a new location or try something unfamiliar, like visiting a new café or hiking trail." },
+            { theme: "Social Connection Day", description: "Reconnect with old friends, reach out to acquaintances, or attend a new social gathering." },
+            { theme: "Creative Expression", description: "Engage in any creative activity—sketch, write, compose music, or try a new craft." },
+            { theme: "Mindfulness Moment", description: "Focus on mindfulness through meditation, deep breathing, or a quiet nature walk." },
+            { theme: "Challenge Yourself", description: "Take on a challenge you’ve been avoiding, like public speaking, learning a new language, or coding." },
+            { theme: "Self-Care & Reflection", description: "Treat yourself to a self-care day: a spa session, a long bath, or a personal journal session." },
+            { theme: "Serendipity Day", description: "Break your routine on purpose and allow chance to guide your choices for the day." },
+            { theme: "Romantic Opportunities", description: "Put yourself out there—be flirty, plan a special date, or express affection openly." },
+            { theme: "Learn Something New", description: "Dive into a fresh topic of interest—watch a documentary or start a small online course." },
+            { theme: "Declutter & Simplify", description: "Focus on cleaning up: organize a room, remove digital clutter, or refine your daily routines." },
+            { theme: "Generosity & Giving", description: "Offer help to someone, donate to a cause, or perform a random act of kindness." },
+            { theme: "Risk-Taking Day", description: "Take a calculated risk—try something that scares you a little, like asking for a raise." },
+            { theme: "Gratitude & Appreciation", description: "Reflect on things you’re grateful for, write thank-you notes, or express appreciation verbally." },
+            { theme: "Focus & Productivity", description: "Set an ambitious goal for the day and go full steam to achieve it with uninterrupted focus." },
+            { theme: "Playfulness & Fun", description: "Be silly! Play a game, tell jokes, or engage in a carefree activity that’s just for fun." },
+            { theme: "Nostalgia & Memory", description: "Revisit the past by looking at old photos, reminiscing, or rediscovering a childhood hobby." },
+            { theme: "Physical Challenge", description: "Do something that challenges your body—a new sport, a fitness class, or an endurance test." },
+            { theme: "Learning to Let Go", description: "Reflect on what’s weighing you down and consciously let go—be it grudges, fears, or tasks." },
+            { theme: "Luck & Surprise", description: "Use chance to dictate your choices today: roll dice, draw lots, or spin a wheel for decisions." },
+            { theme: "Imagination & Fantasy", description: "Immerse yourself in fantasy: create, read, or imagine a world entirely of your own making." },
+            { theme: "Culinary Experimentation", description: "Try a new cuisine, invent a dish, or visit an unfamiliar restaurant. Experiment with flavors!" },
+            { theme: "Gratuitous Learning Day", description: "Choose a random topic and learn about it deeply—anything from obscure history to technology." },
+            { theme: "Unplugged Day", description: "Unplug from technology and enjoy the day with non-digital activities like reading or nature walks." },
+            { theme: "Dress Differently", description: "Change up your style for the day—try a bold new look or dress completely opposite your norm." },
+            { theme: "Reconnect with Nature", description: "Spend intentional time outside—hike, walk barefoot on grass, or simply listen to birds." },
+            { theme: "Collaborative Creativity", description: "Team up with a friend or colleague to create something together, like a shared story or project." },
+            { theme: "Mini-Celebration", description: "Celebrate a small win or random event today—bake a treat, toast with friends, or throw a mini-party." },
+            { theme: "Role Reversal", description: "Imagine yourself in someone else’s shoes—adopt their habits, routines, or style of thinking." },
+            { theme: "Mind-Bending Experiences", description: "Seek out experiences that challenge perception: puzzles, illusions, or thought-provoking media." },
+            { theme: "Gratitude to Strangers", description: "Express gratitude to people you normally overlook: service staff, delivery workers, or strangers." },
+            { theme: "Invent a Tradition", description: "Create a fun new tradition—perhaps a weekly movie night or a quirky family ritual." },
+            { theme: "Random Generosity", description: "Surprise someone with a small gift, leave an uplifting note, or give an unexpectedly big tip." },
+            { theme: "Reverse Routine", description: "Flip your daily habits—start your evening with breakfast foods or swap the order of your tasks." },
+            { theme: "Self-Challenge: Time Limits", description: "Set strict time limits on tasks to force creative solutions and avoid perfectionism." },
+            { theme: "Visual Storytelling", description: "Document your day with photos or create a visual story that captures an aspect of your life." },
+            { theme: "Random Act of Delight", description: "Do something whimsical: hand out flowers, leave happy notes, or engage in playful activities." },
+            { theme: "Curiosity Conversations", description: "Have conversations that go deep or weird—ask thought-provoking questions, like 'What’s your strangest belief?'" },
+            { theme: "Old Habits in New Ways", description: "Tweak your usual activities—brush your teeth with your non-dominant hand, or write with a crayon." },
+            { theme: "Personal Reboot", description: "Reflect and reset—reorganize your workspace, refine goals, or plan new habits." },
+            { theme: "Dream Planning", description: "Plan out an ambitious dream, like a fantasy vacation or dream home—whether or not you pursue it." },
+            { theme: "Revisit a Forgotten Skill", description: "Pick up an old hobby or skill you once enjoyed but have put aside—revive it for a day." },
+            { theme: "Gratitude & Reconciliation", description: "Focus on mending relationships—write a forgiveness letter, apologize, or reconnect with warmth." },
+            { theme: "Volunteer Time", description: "Spend time volunteering for a cause, whether at a local shelter, library, or a community garden." },
+            { theme: "Local Tourism", description: "Be a tourist in your own town—visit a museum, try a new café, or explore a part of town you’ve never seen." },
+            { theme: "Language Day", description: "Learn some phrases in a new language or practice a language you’re learning in daily interactions." },
+            { theme: "Perspective Shift", description: "Engage in an activity that alters your viewpoint—watch a documentary on a new topic or debate an unfamiliar concept." },
+            { theme: "Host a Gathering", description: "Organize a small gathering with a specific theme—be it a game night, a potluck, or a creative session." },
+            { theme: "Do Something Childlike", description: "Engage in activities reminiscent of childhood—fly a kite, draw with chalk, or play a classic game." },
+            { theme: "Positive Affirmations", description: "Start the day by writing or saying affirmations—focus on boosting your mindset and self-esteem." },
+            { theme: "Spontaneous Day", description: "Plan absolutely nothing—let the day unfold naturally, following whims and spontaneous desires." }
+        ];
+
+        function getRandomEntry() {
+            const randomIndex = Math.floor(Math.random() * entries.length);
+            const entry = entries[randomIndex];
+            document.getElementById('theme').textContent = `Theme: ${entry.theme}`;
+            document.getElementById('description').textContent = `Description: ${entry.description}`;
+        }
+    </script>
+
+</body>
